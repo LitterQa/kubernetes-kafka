@@ -1,0 +1,35 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    #volumes:
+    #  - /opt/docker/zookeeper/:/opt/zookeeper-3.4.13/
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      CLUSTER_NAME: KAFKA
+      KAFKA_ADVERTISED_HOST_NAME: 10.10.198.14
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_HOST_NAME: 10.10.198.14
+      KAFKA_BROKER_ID: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/docker/kafka/logs/:/kafka
+      - /opt/docker/kafka/config:/opt/kafka/config
+      - /opt/docker/kafka/bin:/opt/kafka/bin
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    container_name: kafka-manager
+    ports:
+      - 9020:9000
+    environment:
+      ZK_HOSTS: zookeeper:2181
