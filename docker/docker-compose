@@ -21,6 +21,8 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_HOST_NAME: 10.10.198.14
       KAFKA_BROKER_ID: 1
+    depends_on:
+      - zookeeper
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/kafka/logs/:/kafka
